@@ -8,7 +8,7 @@ metadata: { "openclaw": { "requires": { "bins": ["python3"], "env": ["YZLIOT_API
 ## ⚙️ 运行时要求
 
 - **Python 3.6+** （需要 json, os, sys, http.client, time, collections 等标准库）
-- **环境变量 `YZLIOT_API_KEY`** - 必需，请从云智联小程序获取
+- **环境变量 `YZLIOT_API_KEY`** - 必需，请从"云智联YZL"微信小程序获取
 
 ## 🌱 YZL-AIoT 云智联 AIoT 设备管理
 
