@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""云智联 IoT 设备管理工具"""
+"""YZL-AIoT 云智联 AIoT 设备管理工具"""
 
 import json
 import os
@@ -24,34 +24,13 @@ RATE_LIMITS = {
 }
 
 # ============================================================
-# 版本自动更新检测（v1.5.0+）
 # ============================================================
 
 # 当前本地版本
-LOCAL_VERSION = "1.5.0"
+LOCAL_VERSION = "1.0.0"
 
 # 技能 slug（与 ClawHub 注册表一致）
-SKILL_SLUG = "yzl-iot-api"
-
-# ============================================================
-# 停止维护通知 — 引导用户迁移到 YZL-AIoT
-# ============================================================
-
-DEPRECATION_NOTICE = (
-    "\n"
-    f"{'!' * 50}\n"
-    f"⛔ yzl-iot-api 已停止维护\n"
-    f"{'!' * 50}\n"
-    f"此版本 (v{LOCAL_VERSION}) 为 yzl-iot-api 最终版。\n"
-    f"后续将不再更新和维护。\n"
-    f"\n"
-    f"🚚 请迁移至新技能 YZL-AIoT，功能更强，持续更新：\n"
-    f"   clawhub install yzl-aiot\n"
-    f"\n"
-    f"安装后卸载旧技能：\n"
-    f"   clawhub uninstall yzl-iot-api\n"
-    f"{'!' * 50}\n"
-)
+SKILL_SLUG = "yzl-aiot"
 
 # ClawHub Registry API（无需登录即可查询公开技能信息）
 CLAWHUB_REGISTRY = "https://clawhub.ai"
@@ -147,7 +126,7 @@ def check_latest_version(force=False):
     # 查询 ClawHub registry API
     url = f"{CLAWHUB_REGISTRY}/api/v1/skills/{SKILL_SLUG}"
     try:
-        req = urllib.request.Request(url, method="GET", headers={"User-Agent": "yzl-iot-api/1.5.0"})
+        req = urllib.request.Request(url, method="GET", headers={"User-Agent": "yzl-aiot/1.0.0"})
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read().decode("utf-8"))
 
@@ -220,9 +199,9 @@ def format_update_message(version_info):
         f"当前版本: v{local_v}\n"
         f"最新版本: v{latest_v}\n"
         f"\n"
-        f"⚠️ 注意：yzl-iot-api 已停止维护\n"
-        f"请迁移至 YZL-AIoT：\n"
-        f"  clawhub install yzl-aiot\n"
+        f"请使用以下命令更新：\n"
+        f"  clawhub update {SKILL_SLUG}\n"
+        f"  或: clawhub update {SKILL_SLUG} --version {latest_v}\n"
         f"{'=' * 50}\n"
     )
     return msg
@@ -237,14 +216,21 @@ def cmd_check_update():
     
     if version_info.get("error"):
         print(f"\n❌ 检测失败: {version_info['error']}")
-    else:
-        print(f"   远程最新: v{version_info['latest_version']}")
+        return
     
-    print(DEPRECATION_NOTICE)
+    print(f"   远程最新: v{version_info['latest_version']}")
+    
+    if version_info.get("has_update"):
+        print(f"\n🎉 发现新版本!")
+        print(f"   当前: v{version_info['local_version']}")
+        print(f"   最新: v{version_info['latest_version']}")
+        print(f"\n更新方法：")
+        print(f"   clawhub update {SKILL_SLUG}")
+    else:
+        print(f"\n✅ 已是最新版本")
 
 
 # ============================================================
-# 请求频率限制
 # ============================================================
 
 request_times = defaultdict(list)
@@ -863,7 +849,6 @@ def main():
         _version_checked = True
         if _update_msg:
             print(_update_msg)
-        print(DEPRECATION_NOTICE)
         return
     
     cmd = args[0].lower()
@@ -874,7 +859,6 @@ def main():
         _version_checked = True
         if _update_msg:
             print(_update_msg)
-        print(DEPRECATION_NOTICE)
         return
     
     if cmd == "ping":
@@ -918,11 +902,8 @@ def main():
         print("命令: ping, all, list, device <ID>, history <设施ID> [天数], device-history <设备ID> [天数], send <设备ID> <类型> [参数], cmd-list <设备ID>, cmd-detail <指令ID>, check-update")
     
     # 执行后输出版本更新提醒（排除已单独处理的 check-update）
-    if _version_checked:
-        if _update_msg:
-            print(_update_msg)
-        # 停止维护通知（check-update 已单独显示）
-        print(DEPRECATION_NOTICE)
+    if _version_checked and _update_msg:
+        print(_update_msg)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 ---
 name: yzl-iot-api
-description: 云智联 IoT 设备管理API v1.4.0。一句话说就能获取传感器数据和发送控制指令。激活语：云智联设备，钥匙是xxxxxx，帮我打开开关/获取数据
+description: ⛔ 已停止维护，请迁移至 YZL-AIoT。云智联 IoT 设备管理API v1.5.0（最终版）
 homepage: https://github.com/openclaw/skills/tree/main/yzl-iot-api
 metadata: { "openclaw": { "requires": { "bins": ["python3"], "env": ["YZLIOT_API_KEY"] } } }
 ---
@@ -9,6 +9,12 @@ metadata: { "openclaw": { "requires": { "bins": ["python3"], "env": ["YZLIOT_API
 
 - **Python 3.6+** （需要 json, os, sys, http.client, time, collections 等标准库）
 - **环境变量 `YZLIOT_API_KEY`** - 必需，请从云智联小程序获取
+
+> ⛔ **⚠️ 此技能已停止维护**
+>
+> `yzl-iot-api` 已停止更新，未来不再维护。
+> 请使用新技能 **YZL-AIoT** 替代本技能，功能相同且有后续更新支持。
+> 安装命令：`clawhub install yzl-aiot`
 
 ## 🌱 云智联 IoT 设备管理
 
@@ -86,6 +92,34 @@ python3 tool.py send WA1CB1-0000000007 SetFac '["WA1CB1-0000000007","kk1","1"]'
 python3 tool.py send WA1CB1-0000000007 SetFac '["WA1CB1-0000000007","kk1","0"]'
 ```
 
+> ⛔ 此技能已停止维护，请使用 **YZL-AIoT**。
+
+## 🔄 自动版本更新检测 (v1.5.0+ — 最终版)
+
+本技能在 v1.5.0 后停止维护，自动更新检测仅用于提醒用户迁移到 YZL-AIoT。
+
+### 工作方式
+
+1. **自动检测**: 每次运行工具时，静默向 ClawHub 查询最新版本
+2. **缓存机制**: 每 12 小时只检测一次，减少网络请求
+3. **离线容错**: 网络不可用时使用上次缓存结果，不阻塞你的操作
+
+### 手动检查
+
+```bash
+python3 tool.py check-update
+```
+
+### 迁移方法
+
+```bash
+# 安装新技能 YZL-AIoT
+clawhub install yzl-aiot
+
+# 卸载旧技能（可选）
+clawhub uninstall yzl-iot-api
+```
+
 ## ⚡ 请求频率限制
 
 工具已内置请求频率控制，自动处理以下限制：
@@ -103,6 +137,14 @@ python3 tool.py send WA1CB1-0000000007 SetFac '["WA1CB1-0000000007","kk1","0"]'
 当触发频率限制时，会返回错误信息。
 
 ## 版本历史
+
+### v1.5.0 (2026-06-03) — 🚫 最终版
+- ✨ 新增自动版本更新检测功能
+- ✨ 每次运行工具静默检测 ClawHub 最新版本
+- ✨ 自动提醒用户迁移到 **YZL-AIoT**
+- ✨ 新增 `check-update` 子命令手动检查版本
+- ⛔ **此版本为 yzl-iot-api 最终版，后续不再维护**
+- 🚚 **请迁移至 YZL-AIoT：** `clawhub install yzl-aiot`
 
 ### v1.3.9 (2026-04-21)
 - 修复版本号显示问题
